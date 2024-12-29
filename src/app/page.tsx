@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from "~/redux/hooks";
 import Header from "~/components/layouts/Header";
 import { useEffect } from "react";
 import Loading from "~/components/layouts/Loading";
-import { handleLogin } from "~/redux/slices/userSlice";
+import { setLogin } from "~/redux/slices/userSlice";
 import { setLoading } from "~/redux/slices/loadingSlice";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
 
   useEffect(() => {
     // dispatch(setLoading(false))
-    dispatch(handleLogin({...loginState, username: "rizzzz"}))
+    dispatch(setLogin({...loginState, username: "rizzzz"}))
     dispatch(setLoading(false))
 
   }, [])

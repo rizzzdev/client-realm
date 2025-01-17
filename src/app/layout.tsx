@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-// import { Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import "./favicon.ico";
 import StoreProvider from "~/redux/StoreProvider";
 
-// const poppins = Poppins({
-//   variable: "--font-poppins",
-//   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-//   subsets: ["latin"],
-// });
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title:
-    "Realms. - Media Pembelajaran Berbasis Website Berbantuan Next.JS Framework untuk Meningkatkan Penguasaan Materi Relativitas",
+    "Realm. - Media Pembelajaran Berbasis Website Berbantuan Next.JS Framework untuk Meningkatkan Penguasaan Materi Relativitas",
   description:
     "Realms adalah media pembelajaran yang dirancang untuk mempermudah siswa dalam memahami dan mengaplikasikan materi relativitas (khusus).",
   authors: {
@@ -33,9 +33,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StoreProvider>
-        <body className={`
-
-          antialiased`}>{children}</body>
+        <body
+          className={`
+          ${poppins.variable} font-poppins
+          antialiased bg-background`}
+        >
+          {children}
+        </body>
       </StoreProvider>
     </html>
   );

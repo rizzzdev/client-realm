@@ -1,0 +1,6 @@
+const jwtDecode =  require('jwt-decode')
+
+const decoded = jwtDecode('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUyMmI3ZjIwLWNmYzgtNDJiYi1iZmM3LWE3ZWI0Njc5OWE4YyIsInVzZXJuYW1lIjoicml6enptYW9vbzA1IiwiaWF0IjoxNzM1NzAwODQ2LCJleHAiOjE3MzU3MDA4NTZ9.4J6sh5d1ApEtj-r72dBGN9yX03vK4W_Ff9Kvs31s5jg')
+
+
+console.log(decoded)

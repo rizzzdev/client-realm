@@ -9,11 +9,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        color1: "#A7D477",
-        color2: "#E7FBB4",
-        color3: "#DF6D2D",
-        color4: "#C84C05",
-        color5: "#213555"
+        primary: "#002A70",
+        secondary: "#F05100",
+        secondaryAccent: "#F08100",
+        background: "#EFEFEF",
+        gold: "#B59410",
+        silver: "#71706E",
+        bronze: "#804A00",
       },
     },
   },

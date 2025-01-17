@@ -1,98 +1,90 @@
 "use client";
 
-import Link from "next/link";
-import { SignIn, UserPlus } from "@phosphor-icons/react";
-import { useRouter } from "next/navigation";
-export default function Header({
-  active,
-  isLogin,
-  username,
+import { List, X } from "@phosphor-icons/react";
+import Title from "../elements/Title";
+import Menu from "../fragments/Menu";
+import UserButton from "../fragments/UserButton";
+import { useState } from "react";
+
+const HeaderMobile = ({
+  isMenuActive,
+  handleClick,
 }: {
-  active: string;
-  isLogin: boolean;
+  isMenuActive: boolean;
+  handleClick?: () => void;
+}) => {
+  return (
+    <div
+      className={`w-full h-screen fixed top-0 left-0 ${
+        isMenuActive ? "flex" : "hidden"
+      } flex flex-col justify-center items-center px-4 py-2  bg-primary shadow-sm shadow-gray-300 gap-8`}
+    >
+      <div className="w-full flex justify-between items-center">
+        <Title />
+        {isMenuActive && (
+          <X
+            size={32}
+            className="text-white cursor-pointer md:hidden"
+            onClick={handleClick}
+          />
+        )}
+      </div>
+      <Menu className="">
+        <Menu.List href="/" text="BERANDA" />
+        <Menu.List href="/learn" text="BELAJAR" />
+        <Menu.List href="/simulation" text="SIMULASI" />
+        <Menu.List href="/test" text="LATIHAN SOAL" />
+        <Menu.List href="/leaderboard" text="PAPAN PERINGKAT" />
+      </Menu>
+    </div>
+  );
+};
+
+const Header = ({
+  username,
+  fullName,
+  avatarUrl,
+}: {
   username: string;
-}) {
-  const router = useRouter();
+  fullName: string;
+  avatarUrl: string;
+}) => {
+  const [isMenuActive, setIsMenuActive] = useState(false);
+  const handleClick = () => {
+    setIsMenuActive(!isMenuActive);
+  };
 
   return (
-    <header className="w-full h-20 flex justify-center items-center px-14 py-4 text-color5 bg-color1">
-      <div className="w-[20%] text-4xl font-bold flex justify-start items-center">
-        <Link href="/" className="">
-          Realm<span className="text-color3">.</span>
-        </Link>
+    <header className="w-full h-16 md:h-20 flex justify-center items-center px-4 py-2 md:px-8 md:py-4 bg-primary shadow-sm shadow-gray-300">
+      <Title />
+      <Menu className="hidden md:flex">
+        <Menu.List href="/" text="BERANDA" />
+        <Menu.List href="/learn" text="BELAJAR" />
+        <Menu.List href="/simulation" text="SIMULASI" />
+        <Menu.List href="/test" text="LATIHAN SOAL" />
+        <Menu.List href="/leaderboard" text="PAPAN PERINGKAT" />
+      </Menu>
+      <div className="flex justify-center items-center gap-2 md:hidden">
+        <UserButton
+          username={username}
+          fullName={fullName}
+          avatarUrl={avatarUrl}
+        />
+        <List
+          size={32}
+          className="text-white cursor-pointer"
+          onClick={handleClick}
+        />
+        <HeaderMobile isMenuActive={isMenuActive} handleClick={handleClick} />
       </div>
-      <div className="w-[60%] flex justify-center gap-6 items-center  text-sm font-bold">
-        <Link
-          href={`/`}
-          className={`${
-            active === "beranda"
-              ? "text-color3"
-              : "text-color5, hover:text-color3"
-          }`}
-        >
-          BERANDA
-        </Link>
-        <Link
-          href={`/belajar`}
-          className={`${
-            active === "belajar"
-              ? "text-color3"
-              : "text-color5, hover:text-color3"
-          }`}
-        >
-          BELAJAR
-        </Link>
-        <Link
-          href={`/`}
-          className={`${
-            active === "latihan-soal"
-              ? "text-color3"
-              : "text-color5, hover:text-color3"
-          }`}
-        >
-          LATIHAN SOAL
-        </Link>
-        <Link
-          href={`/`}
-          className={`${
-            active === "simulasi"
-              ? "text-color3"
-              : "text-color5, hover:text-color3"
-          }`}
-        >
-          SIMULASI
-        </Link>
-        <Link
-          href={`/`}
-          className={`${
-            active === "dashboard-admin"
-              ? "text-color3"
-              : "text-color5, hover:text-color3"
-          }`}
-        >
-          DASHBOARD ADMIN
-        </Link>
-      </div>
-      {!isLogin && (
-        <div className="w-[20%] flex gap-2 justify-end items-center text-sm font-bold text-white">
-          <button
-            className="hover:bg-color5 flex gap-1 justify-center items-center bg-color3 py-1 px-3 rounded-lg ease-in-out duration-500"
-            onClick={() => router.push("/masuk")}
-          >
-            <SignIn size={24} />
-            <p>MASUK</p>
-          </button>
-          <button className="hover:bg-color5 flex gap-1 justify-center items-center bg-color3 py-1 px-3 rounded-lg ease-in-out duration-500">
-            <UserPlus size={24} weight="fill" />
-            <p>REGISTRASI</p>
-          </button>
-        </div>
-      )}
-      {isLogin && (
-        <div className="w-[20%] flex justify-end items-center text-sm font-bold text-white">
-          <div className="p-2 bg-color4 text-white rounded-md">{username}</div>
-        </div>
-      )}
+      <UserButton
+        username={username}
+        fullName={fullName}
+        avatarUrl={avatarUrl}
+        className="hidden md:flex"
+      />
     </header>
   );
-}
+};
+
+export default Header;

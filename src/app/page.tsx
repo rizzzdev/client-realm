@@ -1,33 +1,39 @@
-"use client"
-import { useAppSelector, useAppDispatch } from "~/redux/hooks";
+"use client";
+
+import { useAppSelector } from "~/redux/hooks";
 import Header from "~/components/layouts/Header";
-import { useEffect } from "react";
 import Loading from "~/components/layouts/Loading";
-import { setLogin } from "~/redux/slices/userSlice";
-import { setLoading } from "~/redux/slices/loadingSlice";
+import useInitialize from "~/hooks/useInitialize";
 
 export default function Home() {
-  const loginState = useAppSelector(state => state.user.login)
-  const loadingState = useAppSelector(state => state.loading)
-  const dispatch = useAppDispatch()
+  const userState = useAppSelector((state) => state.user);
+  const commonState = useAppSelector((state) => state.common);
 
-  useEffect(() => {
-    // dispatch(setLoading(false))
-    dispatch(setLogin({...loginState, username: "rizzzz"}))
-    dispatch(setLoading(false))
+  useInitialize();
 
-  }, [])
-
-  if (loadingState.isLoading) {
-    return (
-      <Loading/>
-    )
+  if (commonState.isLoading || !userState.isLogin) {
+    return <Loading />;
   }
 
   return (
-    <>
-      <Header active="beranda" isLogin={loginState.isLogin} username={loginState.username} />
-      <h3 className="text-color1">SELAMAT DATANG {loginState.username}</h3>
-    </>
+    <div className="w-full flex flex-col justify-center items-center overflow-hidden no-scrollbar">
+      <Header
+        username={userState.username}
+        avatarUrl={userState.avatarUrl}
+        fullName={userState.fullName}
+      />
+      <div className="w-full h-[calc(100vh-80px)] p-2 flex justify-center items-center gap-2">
+        <div className="w-full h-full overflow-y-scroll no-scrollbar">
+          <div
+            className={`w-full min-h-full bg-primary p-2 rounded-md text-white text-md flex justify-center items-center font-bold flex-col`}
+          >
+            <h3 className="text-3xl md:text-5xl uppercase text-center w-full">
+              SELAMAT DATANG {userState.fullName}
+            </h3>
+            <p className="w-full text-center mt-4">Selamat belajar di Realm!</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

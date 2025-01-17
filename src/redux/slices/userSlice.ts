@@ -1,59 +1,40 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface LoginState {
-  isLogin: boolean,
-  username: string,
-  password: string
-}
-
-export interface RegisterState {
-  username: string,
-  password: string,
-  confirmPassword: string,
-  firstName: string,
-  lastName?: string,
-}
-
 export interface UserState {
-  login: LoginState,
-  register: RegisterState
+  id: string;
+  isLogin: boolean;
+  username: string;
+  fullName: string;
+  gender: string;
+  avatarUrl: string;
+  accessToken: string;
 }
-
-const userStateLS = JSON.parse(window?.localStorage?.getItem('login-state') ?? '{}')
 
 const userState: UserState = {
-  login: {
-    isLogin: userStateLS.isLogin ?? false,
-    username: userStateLS.username ?? '',
-    password: '',
-  },
-  register: {
-    username: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: ''
-  }
-}
+  id: "",
+  isLogin: false,
+  username: "",
+  fullName: "",
+  gender: "",
+  avatarUrl: "",
+  accessToken: "",
+};
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "student",
   initialState: userState,
   reducers: {
-    setLogin: (state: UserState, action: PayloadAction<LoginState>) => {
+    setUser: (state: UserState, action: PayloadAction<UserState>) => {
       return {
         ...state,
-        login: action.payload
-      }
+        ...action.payload,
+      };
     },
-    setRegister: (state: UserState, action: PayloadAction<RegisterState>) => {
-      return {
-        ...state,
-        register: action.payload
-      }
+    resetUser: () => {
+      return userState;
     },
   },
-})
+});
 
-export const { setLogin, setRegister } = userSlice.actions
-export const userReducer = userSlice.reducer
+export const { setUser, resetUser } = userSlice.actions;
+export const userReducer = userSlice.reducer;

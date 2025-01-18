@@ -49,40 +49,13 @@ const equationElementParser = (stringElement: string, id: string) => {
   const elementSplit = stringElement
     ?.split(/<\/?equation>/)
     ?.filter((el) => el.trim() !== "");
-  const containTagMap = elementSplit
-    ?.filter((_, index) => index % 2 !== 0)
-    ?.map((substring) => {
-      const indexSubstring = stringElement.indexOf(substring);
-      return {
-        type: "contain tag",
-        value: substring,
-        index: indexSubstring,
-      };
-    });
-  const notContainTag = elementSplit
-    ?.filter((_, index) => index % 2 === 0)
-    ?.map((substring) => {
-      const indexSubstring = stringElement.indexOf(substring);
-      return {
-        type: "not contain tag",
-        value: substring,
-        index: indexSubstring,
-      };
-    });
-  const allElementSorted = [...containTagMap, ...notContainTag].sort(
-    (a, b) => a.index - b.index
-  );
-  const allElementMap = allElementSorted.map((element, index) => {
-    if (element.type === "not contain tag") {
-      return element.value;
+  const allElementMap = elementSplit.map((element, index) => {
+    if (index % 2 === 0) {
+      return element;
     }
-    return (
-      <LearnPage.Material.Equation
-        key={element.index + id + index}
-        text={element.value}
-      />
-    );
+    return <LearnPage.Material.Equation key={id + index} text={element} />;
   });
+  console.log(allElementMap);
   return allElementMap;
 };
 

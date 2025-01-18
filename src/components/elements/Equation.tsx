@@ -10,22 +10,21 @@ const Equation = ({
   text: string;
   className?: string;
 }) => {
-  const textValidation = text
-    .split(/<\/?script>/g)
-    .filter((a) => a.trim() !== "")[0];
-  const latex =
-    text === textValidation
-      ? katex.renderToString(text, {
-          output: "mathml",
-        })
-      : "bad request";
+  // const textValidation = text
+  //   .split(/<\/?script>/g)
+  //   .filter((a) => a.trim() !== "")[0];
+  const latex = text
+    ? katex.renderToString(text, {
+        output: "html",
+      })
+    : "bad request";
 
   return (
     <span
       dangerouslySetInnerHTML={{
         __html: latex,
       }}
-      className={`text-lg font-bold ${className}`}
+      className={`text-md  ${className}`}
     ></span>
   );
 };

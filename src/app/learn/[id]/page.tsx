@@ -9,8 +9,15 @@ import Quiz from "~/components/layouts/Quiz";
 import useInitialize from "~/hooks/useInitialize";
 import axiosIns from "~/libs/axiosIns";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
-import { setCurrentMaterial } from "~/redux/slices/materialsSlice";
-import { QuestionState, setQuestions } from "~/redux/slices/questionSlice";
+import {
+  resetMaterials,
+  setCurrentMaterial,
+} from "~/redux/slices/materialsSlice";
+import {
+  QuestionState,
+  resetQuestions,
+  setQuestions,
+} from "~/redux/slices/questionSlice";
 import { Activity as ActivityType } from "~/types/activity";
 import { ApiResponse } from "~/types/apiResponse";
 import { Material as MaterialType } from "~/types/material";
@@ -38,7 +45,6 @@ const Learn = () => {
           )}`,
         },
       });
-      console.log(material);
       dispatch(
         setCurrentMaterial({
           quizId: material.data.data.quiz!.id!,
@@ -77,23 +83,9 @@ const Learn = () => {
         }
       );
       dispatch(setQuestions(questionLists));
-      console.log(quiz.data.data.questions);
-
-      // dispatch(setQuestions(quiz.data.data.questions?.map(question => {
-      //   return {
-      //     id: question.id,
-      //     question: question.question,
-      //     optionA: question.optionA,
-      //     optionB: question.optionB,
-      //     optionC: question.optionC,
-      //     optionD: question.optionD,
-      //     optionE: question.optionE,
-      //     correctOption: question.correctOption,
-
-      //   }
-      // })));
     } catch {
-      return <p>404 NOT FOUND</p>;
+      dispatch(resetMaterials());
+      dispatch(resetQuestions());
     }
   });
 
@@ -102,9 +94,10 @@ const Learn = () => {
       (question) => question.activeOption
     );
     if (!isReadyToSubmit) {
-      alert("SOal blum terjawab semua");
+      alert("Soal blum terjawab semua");
       return;
     }
+
     const scorePerItem = 100 / questionsState.length;
     let mark = 0;
     questionsState.forEach((question) => {

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import Header from "~/components/layouts/Header";
 import LearningCard from "~/components/layouts/LearningCard";
 import Loading from "~/components/layouts/Loading";
@@ -8,7 +7,6 @@ import useInitialize from "~/hooks/useInitialize";
 import axiosIns from "~/libs/axiosIns";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
 import { setMaterials } from "~/redux/slices/materialsSlice";
-// import { resetUser } from "~/redux/slices/userSlice";
 
 interface apiResponse<T> {
   success: boolean;
@@ -33,34 +31,33 @@ const Learn = () => {
   const materialsState = useAppSelector((state) => state.materials);
   const dispatch = useAppDispatch();
 
-  useInitialize(() => {
+  useInitialize(async () => {
     const accessToken = window.localStorage.getItem("access-token");
 
-    axiosIns
-      .get<apiResponse<MaterialData[]>>("/materials", {
+    const materialsResponse = await axiosIns.get<apiResponse<MaterialData[]>>(
+      "/materials",
+      {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      })
-      .then((res) => {
-        res.data.data.forEach((material: MaterialData) => {
-          dispatch(
-            setMaterials({
-              id: material.id,
-              title: material.title,
-              description: material.description,
-              imageUrl: material.imageUrl,
-              materialString: material.materialString,
-              quizId: material.quizId,
-            })
-          );
-        });
-      });
+      }
+    );
+
+    const materialData = materialsResponse.data.data;
+
+    materialData.forEach((material: MaterialData) => {
+      dispatch(
+        setMaterials({
+          id: material.id,
+          title: material.title,
+          description: material.description,
+          imageUrl: material.imageUrl,
+          materialString: material.materialString,
+          quizId: material.quizId,
+        })
+      );
+    });
   });
-
-  // useToken();
-
-  useEffect(() => {}, [dispatch]);
 
   if (commonState.isLoading || !userState.isLogin) {
     return <Loading />;

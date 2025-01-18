@@ -36,7 +36,7 @@ const Leaderboard = ({
               ))}
             </tbody>
           </table>
-          <p className="mt-4 text-xs font-bold">
+          <p className="mt-4 text-xs font-bold text-justify">
             *Keterangan: Akumulasi nilai diperoleh dari nilai kuis dan nilai
             tes. Jika terdapat kesamaan akumulasi nilai, maka posisi akan
             diurutkan berdasarkan waktu saat mengirimkan kuis dan tes.

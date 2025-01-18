@@ -32,8 +32,8 @@ const HeaderMobile = ({
       <Menu className="">
         <Menu.List href="/" text="BERANDA" />
         <Menu.List href="/learn" text="BELAJAR" />
+        <Menu.List href="/test" text="TES" />
         <Menu.List href="/simulation" text="SIMULASI" />
-        <Menu.List href="/test" text="LATIHAN SOAL" />
         <Menu.List href="/leaderboard" text="PAPAN PERINGKAT" />
       </Menu>
     </div>

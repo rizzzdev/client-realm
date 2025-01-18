@@ -38,7 +38,8 @@ const Leaderboard = ({
           </table>
           <p className="mt-4 text-xs font-bold">
             *Keterangan: Akumulasi nilai diperoleh dari nilai kuis dan nilai
-            test!
+            tes. Jika terdapat kesamaan akumulasi nilai, maka posisi akan
+            diurutkan berdasarkan waktu saat mengirimkan kuis dan tes.
           </p>
         </div>
       </div>

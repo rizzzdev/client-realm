@@ -144,7 +144,9 @@ const Learn = () => {
           title={materialState.currentMaterial.title}
           strElement={materialState.currentMaterial.materialString}
         />
-        <Quiz questionsState={questionsState} onSubmitQuiz={onSubmitQuiz} />
+        {questionsState[0] && (
+          <Quiz questionsState={questionsState} onSubmitQuiz={onSubmitQuiz} />
+        )}
       </LearnPage>
     </div>
   );

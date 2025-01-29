@@ -8,6 +8,19 @@ import { useAppDispatch } from "~/redux/hooks";
 import Button from "../elements/Button";
 import Image from "next/image";
 
+const equationElementParser = (stringElement: string, id: string) => {
+  const elementSplit = stringElement
+    ?.split(/<\/?equation>/)
+    ?.filter((el) => el.trim() !== "");
+  const allElementMap = elementSplit.map((element, index) => {
+    if (index % 2 === 0) {
+      return element;
+    }
+    return <LearnPage.Material.Equation key={id + index} text={element} />;
+  });
+  return allElementMap;
+};
+
 const Question = ({
   children,
   imageUrl,
@@ -29,7 +42,9 @@ const Question = ({
           priority
         />
       )}
-      <p className="w-full font-bold mb-2">{text}</p>
+      <p className="w-full font-bold mb-2">
+        {equationElementParser(text, "question")}
+      </p>
       <div className="w-full flex flex-col gap-1 justify-center items-center">
         {children}
       </div>
@@ -59,7 +74,7 @@ const Answer = ({
       } rounded-md`}
       onClick={onClick}
     >
-      {value}
+      {equationElementParser(value, "answer")}
     </button>
   );
 };

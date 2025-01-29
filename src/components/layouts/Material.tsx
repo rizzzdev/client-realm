@@ -55,7 +55,6 @@ const equationElementParser = (stringElement: string, id: string) => {
     }
     return <LearnPage.Material.Equation key={id + index} text={element} />;
   });
-  console.log(allElementMap);
   return allElementMap;
 };
 

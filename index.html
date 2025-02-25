@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Translate Gambar</title>
+    <style>
+      #container {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+      #gambar {
+        position: relative;
+        width: 100%;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <img id="gambar" src="https://via.placeholder.com/100" alt="Gambar" />
+    </div>
+    <script>
+      const gambar = document.getElementById("gambar");
+      let posisiX = 0;
+      let time = 0;
+      function pindahGambar() {
+        if (posisiX > gambar.clientWidth) {
+          posisiX = 0;
+        } else {
+          posisiX += 1;
+        }
+        gambar.style.transform = `translateX(${posisiX}px)`;
+      }
+      time += 1;
+      setInterval(pindahGambar, 1);
+    </script>
+  </body>
+</html>

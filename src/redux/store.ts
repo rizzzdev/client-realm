@@ -5,6 +5,7 @@ import { userReducer } from "./slices/userSlice";
 import { materialsReducer } from "./slices/materialsSlice";
 import { questionsReducer } from "./slices/questionSlice";
 import { leaderboardReducer } from "./slices/leaderboardSlice";
+import { simulationReducer } from "./slices/simulationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     materials: materialsReducer,
     questions: questionsReducer,
     leaderboard: leaderboardReducer,
+    simulation: simulationReducer,
   },
 });
 

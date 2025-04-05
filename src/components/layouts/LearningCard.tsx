@@ -7,11 +7,13 @@ const LearningCard = ({
   description,
   materialId,
   imageUrl,
+  isUnlocked,
 }: {
   title: string;
   description: string;
   materialId: string;
   imageUrl: string;
+  isUnlocked: boolean;
 }) => {
   const router = useRouter();
 
@@ -22,7 +24,7 @@ const LearningCard = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-between items-center bg-background text-primary border-[2px] border-secondary rounded-md overflow-hidden hover:shadow-md hover:shadow-secondary hover:-translate-y-1">
+    <div className="w-full flex flex-col justify-between items-center border-[4px] border-white rounded-md overflow-hidden hover:shadow-md hover:shadow-white hover:-translate-y-1 text-primary bg-white">
       <Image
         src={imageUrl}
         alt="img"
@@ -40,7 +42,16 @@ const LearningCard = ({
         </p>
       </div>
 
-      <Button text="MULAI BELAJAR" className="mt-3" onClick={handleClick} />
+      <Button
+        text={
+          isUnlocked
+            ? "Mulai Belajar"
+            : "Silahkan selesaikan materi sebelumnya untuk membuka materi ini!"
+        }
+        className="mt-3 text-white bg-primary"
+        onClick={handleClick}
+        disabled={!isUnlocked}
+      />
     </div>
   );
 };

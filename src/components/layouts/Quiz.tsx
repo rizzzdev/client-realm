@@ -31,7 +31,7 @@ const Question = ({
   text: string;
 }) => {
   return (
-    <div className="w-full flex flex-col gap-2 justify-center items-center mb-4 border-2 border-white rounded-md p-2">
+    <div className="w-full flex flex-col gap-2 justify-center items-center mb-4 border-2 border-primary rounded-md p-2 md:p-10">
       {imageUrl && (
         <Image
           src={imageUrl}
@@ -69,8 +69,8 @@ const Answer = ({
     <button
       className={`w-full p-2 border-2 ${
         questionsState[index].activeOption === answerOption
-          ? "border-secondary"
-          : "border-white"
+          ? " bg-primary text-white"
+          : "border-primary"
       } rounded-md`}
       onClick={onClick}
     >
@@ -90,7 +90,7 @@ const Quiz = ({
 
   return (
     <LearnPage.Quiz>
-      <div className="w-full flex flex-col gap-2 justify-center items-center ">
+      <div className="w-full flex flex-col gap-4 justify-center items-center ">
         {questionsState?.map((question, index) => {
           return (
             <Question
@@ -192,7 +192,7 @@ const Quiz = ({
         })}
         <Button
           text="Kirim Jawaban"
-          className="w-full mt-10"
+          className="w-full mt-10 text-white bg-primary text-sm md:text-lg p-2 md:p-6"
           onClick={onSubmitQuiz}
         />
       </div>

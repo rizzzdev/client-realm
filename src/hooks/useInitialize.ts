@@ -1,14 +1,20 @@
+"use client";
+
 import { jwtDecode } from "jwt-decode";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import axiosIns from "~/libs/axiosIns";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
+import { resetActivities } from "~/redux/slices/activitySlice";
 import { resetSignin, resetSignup } from "~/redux/slices/authSlice";
 import { setButtonDisabled, setLoading } from "~/redux/slices/commonSlice";
 import { resetLeaderboard } from "~/redux/slices/leaderboardSlice";
+import { resetMark } from "~/redux/slices/markSlice";
 import { resetMaterials } from "~/redux/slices/materialsSlice";
 import { resetQuestions } from "~/redux/slices/questionSlice";
+import { resetTests } from "~/redux/slices/testSlice";
 import { resetUser, setUser, UserState } from "~/redux/slices/userSlice";
+import { resetUsers } from "~/redux/slices/usersSlice";
 
 const useInitialize = (callback?: () => void) => {
   const userState = useAppSelector((state) => state.user);
@@ -25,6 +31,10 @@ const useInitialize = (callback?: () => void) => {
     dispatch(resetLeaderboard());
     dispatch(setLoading(true));
     dispatch(setButtonDisabled(false));
+    dispatch(resetActivities());
+    dispatch(resetUsers());
+    dispatch(resetMark());
+    dispatch(resetTests());
 
     const screenWidth = window.screen.width;
     const html = document.querySelector("html");
@@ -48,7 +58,6 @@ const useInitialize = (callback?: () => void) => {
 
     try {
       const { exp } = jwtDecode(accessToken);
-      console.log({ exp: exp! * 1000, now: Date.now() });
       if (exp! * 1000 < Date.now()) {
         const result = await axiosIns.get<{ data: { accessToken: string } }>(
           "/new-access-token"
@@ -84,8 +93,14 @@ const useInitialize = (callback?: () => void) => {
         accessToken: accessToken,
         avatarUrl: decodedAccessToken.avatarUrl,
         gender: decodedAccessToken.gender,
+        role: decodedAccessToken.role,
       })
     );
+
+    if (path.split("/")[1] === "admin" && userState.role !== "ADMIN") {
+      dispatch(setLoading(false));
+    }
+
     if (callback) await callback!();
     dispatch(setLoading(false));
   };

@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Activity } from "./activitySlice";
+import { Quiz } from "./quizSlice";
 
 export interface Material {
   id: string;
@@ -6,7 +8,10 @@ export interface Material {
   description: string;
   imageUrl: string;
   materialString: string;
-  quizId: string;
+  createdAt?: Date;
+  deletedAt?: Date;
+  quiz: Quiz;
+  activity: Activity[];
 }
 
 export interface Materials {
@@ -22,7 +27,13 @@ const materialsState: Materials = {
     description: "",
     imageUrl: "",
     materialString: "",
-    quizId: "",
+    quiz: {
+      id: "",
+      marks: [],
+      materialId: "",
+      questions: [],
+    },
+    activity: [],
   },
 };
 

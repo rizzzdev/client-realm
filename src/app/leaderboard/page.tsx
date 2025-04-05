@@ -11,7 +11,6 @@ import { ApiResponse } from "~/types/apiResponse";
 import { Leaderboard as LeaderboardType } from "~/types/leaderboard";
 
 const LeaderBoardPage = () => {
-  const userState = useAppSelector((state) => state.user);
   const commonState = useAppSelector((state) => state.common);
   const leaderboardState = useAppSelector((state) => state.leaderboard);
   const dispatch = useAppDispatch();
@@ -36,11 +35,7 @@ const LeaderBoardPage = () => {
 
   return (
     <div className="w-full flex flex-col justify-center items-center overflow-hidden no-scrollbar">
-      <Header
-        username={userState.username}
-        avatarUrl={userState.avatarUrl}
-        fullName={userState.fullName}
-      />
+      <Header />
       <Leaderboard leaderboardList={leaderboardState} />
     </div>
   );

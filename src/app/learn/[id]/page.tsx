@@ -1,15 +1,20 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import Header from "~/components/layouts/Header";
 import LearnPage from "~/components/layouts/LearnPage";
 import Loading from "~/components/layouts/Loading";
 import Material from "~/components/layouts/Material";
 import Quiz from "~/components/layouts/Quiz";
+import TransitPage from "~/components/layouts/TransitPage";
 import useInitialize from "~/hooks/useInitialize";
 import axiosIns from "~/libs/axiosIns";
 import { useAppDispatch, useAppSelector } from "~/redux/hooks";
+import { setLoading } from "~/redux/slices/commonSlice";
 import {
+  Material as MaterialType,
   resetMaterials,
   setCurrentMaterial,
 } from "~/redux/slices/materialsSlice";
@@ -18,56 +23,88 @@ import {
   resetQuestions,
   setQuestions,
 } from "~/redux/slices/questionSlice";
-import { Activity as ActivityType } from "~/types/activity";
+import { Quiz as QuizType } from "~/redux/slices/quizSlice";
 import { ApiResponse } from "~/types/apiResponse";
-import { Material as MaterialType } from "~/types/material";
-import { Question as QuestionType } from "~/types/question";
-import { Quiz as QuizType } from "~/types/quiz";
 
 const Learn = () => {
   const param = useParams<{ id: string }>();
+  // const queryParams = Boolean(useSearchParams().get("quiz"));
   const id = param.id;
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const commonState = useAppSelector((state) => state.common);
   const userState = useAppSelector((state) => state.user);
   const materialState = useAppSelector((state) => state.materials);
   const questionsState = useAppSelector((state) => state.questions);
 
+  const [isPrevDoneState, setIsPrevDoneState] = useState(false);
+  const [isExist, setIsExist] = useState(true);
+  const [quizElement, setQuizElement] = useState<HTMLElement | null>(null);
+
   useInitialize(async () => {
-    try {
-      const material = await axiosIns.get<
-        ApiResponse<MaterialType<ActivityType, QuizType<QuestionType, null>>>
-      >("/materials/" + id, {
+    const materials = await axiosIns.get<ApiResponse<MaterialType[]>>(
+      "/materials/",
+      {
         headers: {
           Authorization: `Bearer ${window.localStorage.getItem(
             "access-token"
           )}`,
         },
-      });
-      dispatch(
-        setCurrentMaterial({
-          quizId: material.data.data.quiz!.id!,
-          id: material.data.data.id,
-          title: material.data.data.title,
-          description: material.data.data.description,
-          imageUrl: material.data.data.imageUrl,
-          materialString: material.data.data.materialString,
-        })
+      }
+    );
+
+    const material = materials.data.data.find((material) => material.id === id);
+
+    if (!material) {
+      setIsExist(false);
+      return;
+    }
+
+    const indexMaterial = materials.data.data.indexOf(material!);
+    const prevMaterial = materials.data.data[indexMaterial - 1];
+    const isPrevDone =
+      indexMaterial === 0 ||
+      prevMaterial?.activity.find(
+        (activity) =>
+          activity.materialId === prevMaterial.id &&
+          activity.userId === userState.id
       );
 
-      const quiz = await axiosIns.get<ApiResponse<QuizType<QuestionType, []>>>(
-        `/quizzes/${material.data.data.quiz.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${window.localStorage.getItem(
-              "access-token"
-            )}`,
-          },
-        }
-      );
+    if (isPrevDone) {
+      setIsPrevDoneState(true);
+    }
 
-      const questionLists: QuestionState[] = quiz.data.data.questions!.map(
+    dispatch(
+      setCurrentMaterial({
+        quiz: material!.quiz,
+        id: material!.id,
+        title: material!.title,
+        description: material!.description,
+        imageUrl: material!.imageUrl,
+        materialString: material!.materialString,
+        activity: material!.activity,
+      })
+    );
+
+    const quiz = await axiosIns.get<ApiResponse<QuizType>>(
+      `/quizzes/${material!.quiz.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem(
+            "access-token"
+          )}`,
+        },
+      }
+    );
+
+    // if (queryParams) {
+    //   const quizElementPosition = quizElement?.scrollHeight;
+    //   window.scrollTo({ top: quizElementPosition!, behavior: "smooth" });
+    // }
+
+    if (quiz.data.data?.questions) {
+      const questionLists: QuestionState[] = quiz.data.data.questions.map(
         (question) => {
           return {
             id: question.id!,
@@ -83,18 +120,47 @@ const Learn = () => {
         }
       );
       dispatch(setQuestions(questionLists));
-    } catch {
-      dispatch(resetMaterials());
-      dispatch(resetQuestions());
+
+      return;
     }
+
+    dispatch(resetMaterials());
+    dispatch(resetQuestions());
   });
 
+  useEffect(() => {
+    if (!quizElement) {
+      setQuizElement(document.getElementById("quiz"));
+    }
+
+    console.log(quizElement);
+  }, [quizElement]);
+
   const onSubmitQuiz = async () => {
+    const accessToken = window.localStorage.getItem("access-token") ?? "";
+    try {
+      const { exp } = jwtDecode(accessToken);
+      if (exp! * 1000 < Date.now()) {
+        const result = await axiosIns.get<{ data: { accessToken: string } }>(
+          "/new-access-token"
+        );
+        window.localStorage.setItem(
+          "access-token",
+          result.data.data.accessToken
+        );
+      }
+    } catch {
+      window.localStorage.setItem("access-token", "");
+      router.push("/signin");
+      dispatch(setLoading(false));
+      return;
+    }
+
     const isReadyToSubmit = questionsState.every(
       (question) => question.activeOption
     );
     if (!isReadyToSubmit) {
-      alert("Soal blum terjawab semua");
+      alert("Soal belum terjawab semua!");
       return;
     }
 
@@ -110,7 +176,7 @@ const Learn = () => {
       "/marks",
       {
         userId: userState.id,
-        quizId: materialState.currentMaterial.quizId,
+        quizId: materialState.currentMaterial.quiz.id,
         mark: mark,
       },
       {
@@ -121,6 +187,24 @@ const Learn = () => {
         },
       }
     );
+
+    await axiosIns.post(
+      "/activities",
+      {
+        activityType: "QUIZ",
+        quizId: materialState.currentMaterial.quiz.id,
+        userId: userState.id,
+        message: `Menyelesaikan quiz pada materi "${materialState.currentMaterial.title}"`,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem(
+            "access-token"
+          )}`,
+        },
+      }
+    );
+
     alert(`Nilai Anda ${mark}`);
   };
 
@@ -128,26 +212,37 @@ const Learn = () => {
     return <Loading />;
   }
 
-  if (!materialState.currentMaterial.id) {
-    return <p>404 NOT FOUND</p>;
-  }
-
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
-      <Header
-        avatarUrl={userState.avatarUrl}
-        fullName={userState.fullName}
-        username={userState.username}
-      />
-      <LearnPage>
-        <Material
-          title={materialState.currentMaterial.title}
-          strElement={materialState.currentMaterial.materialString}
-        />
-        {questionsState[0] && (
-          <Quiz questionsState={questionsState} onSubmitQuiz={onSubmitQuiz} />
-        )}
-      </LearnPage>
+      <Header />
+      {!isExist && (
+        <TransitPage>
+          Halaman yang Anda tuju tidak tersedia! Silahkan kembali ke halaman
+          Beranda!
+        </TransitPage>
+      )}
+      {!isPrevDoneState && userState.role !== "ADMIN" && (
+        <TransitPage>
+          Selesaikan terlebih dahulu materi sebelumnya sebelum mangakses materi
+          ini!
+        </TransitPage>
+      )}
+      {(isPrevDoneState || userState.role === "ADMIN") && (
+        <LearnPage>
+          <Material
+            title={materialState.currentMaterial.title}
+            strElement={materialState.currentMaterial.materialString}
+          />
+          {questionsState[0] && (
+            <>
+              <Quiz
+                questionsState={questionsState}
+                onSubmitQuiz={onSubmitQuiz}
+              />
+            </>
+          )}
+        </LearnPage>
+      )}
     </div>
   );
 };

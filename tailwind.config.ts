@@ -9,13 +9,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#002A70",
+        primary: "#27445D",
         secondary: "#F05100",
         secondaryAccent: "#F08100",
         background: "#EFEFEF",
+        text: "#2c3d4f",
         gold: "#B59410",
         silver: "#71706E",
         bronze: "#804A00",
+      },
+      backgroundImage: {
+        simBg: "url('/sim-bg.jpg')",
       },
     },
   },

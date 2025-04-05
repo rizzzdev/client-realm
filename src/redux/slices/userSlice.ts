@@ -2,12 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
   id: string;
-  isLogin: boolean;
+  isLogin?: boolean;
   username: string;
   fullName: string;
   gender: string;
   avatarUrl: string;
-  accessToken: string;
+  accessToken?: string;
+  role: string;
+  signedUpAt?: Date;
+  deletedAt?: Date;
 }
 
 const userState: UserState = {
@@ -18,6 +21,7 @@ const userState: UserState = {
   gender: "",
   avatarUrl: "",
   accessToken: "",
+  role: "",
 };
 
 const userSlice = createSlice({

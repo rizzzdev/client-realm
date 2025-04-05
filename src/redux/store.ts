@@ -6,6 +6,11 @@ import { materialsReducer } from "./slices/materialsSlice";
 import { questionsReducer } from "./slices/questionSlice";
 import { leaderboardReducer } from "./slices/leaderboardSlice";
 import { simulationReducer } from "./slices/simulationSlice";
+import { activityReducer } from "./slices/activitySlice";
+import { usersReducer } from "./slices/usersSlice";
+import { markReducer } from "./slices/markSlice";
+import { quizzesReducer } from "./slices/quizSlice";
+import { testsReducer } from "./slices/testSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +21,11 @@ export const store = configureStore({
     questions: questionsReducer,
     leaderboard: leaderboardReducer,
     simulation: simulationReducer,
+    activity: activityReducer,
+    users: usersReducer,
+    mark: markReducer,
+    quizzes: quizzesReducer,
+    tests: testsReducer,
   },
 });
 

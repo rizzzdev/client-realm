@@ -81,7 +81,7 @@ const Signin = () => {
   }
 
   return (
-    <LoginRegisterForm>
+    <LoginRegisterForm onSubmit={handleSignin}>
       <LoginRegisterForm.Header text="Silahkan Sign In untuk memulai belajar di Realm!" />
       <LoginRegisterForm.Input
         name="username"
@@ -104,7 +104,11 @@ const Signin = () => {
         value={signinState.password ?? ""}
       />
       <LoginRegisterForm.Warning type="signin" />
-      <LoginRegisterForm.Button text="SIGN IN" onClick={handleSignin} />
+      <LoginRegisterForm.Button
+        text="SIGN IN"
+        onClick={handleSignin}
+        className="bg-primary text-white"
+      />
       <LoginRegisterForm.Redirect to="signup" />
     </LoginRegisterForm>
   );

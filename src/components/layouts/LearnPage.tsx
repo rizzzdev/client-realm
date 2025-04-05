@@ -13,7 +13,7 @@ const Highlight = ({
 }) => {
   return (
     <div
-      className={`w-full my-4 text-justify items-center bg-secondaryAccent p-2 rounded-md ${className}`}
+      className={`w-full my-4 text-justify items-center bg-white text-primary p-2 rounded-md ${className}`}
     >
       {text && (
         <p className="w-full text-md font-bold uppercase mb-4 flex items-center">
@@ -58,14 +58,15 @@ const Material = ({
   children: ReactNode;
 }) => {
   return (
-    <div className="w-full h-full md:overflow-y-scroll md:pr-1 md:no-scrollbar">
-      <div
-        className={`w-full min-h-full bg-primary p-4 rounded-md text-white text-md ${className}`}
-      >
-        <h3 className="text-xl font-bold mb-8">Materi</h3>
-        <h1 className="font-bold text-2xl mb-4">{title ?? "Lorem Ipsum"}</h1>
-        {children}
-      </div>
+    <div
+      className={`w-full min-h-full pt-24 pb-4 px-4 md:pt-40 md:pb-20 md:px-20 bg-primary text-white text-sm md:text-lg ${className}`}
+      id="material"
+    >
+      <h3 className="text-lg md:text-xl font-bold mb-8">Materi</h3>
+      <h1 className="font-bold text-xl md:text-2xl mb-4">
+        {title ?? "Lorem Ipsum"}
+      </h1>
+      {children}
     </div>
   );
 };
@@ -78,23 +79,22 @@ const Quiz = ({
   className?: string;
 }) => {
   return (
-    <div className="w-full md:w-[50%] h-full md:overflow-y-scroll md:pr-1 md:no-scrollbar">
-      <div
-        className={`w-full min-h-full bg-primary p-4 rounded-md text-white text-md ${className}`}
-      >
-        <h3 className="text-xl font-bold">Quiz</h3>
-        <p className="w-full text-justify mb-8 text-sm">
-          Jawaban Quiz yang akan terekam ke database hanyalah jawaban yang
-          dikirim untuk pertama kalinya, mohon menjawab dengan hati-hati!
-        </p>
-        {children}
-      </div>
+    <div
+      className={`w-full min-h-full p-4 md:p-16 text-primary text-sm md:text-lg ${className}`}
+      id="quiz"
+    >
+      <h3 className="text-lg md:text-xl font-bold">Quiz</h3>
+      <p className="w-full text-justify mb-8 text-sm md:text-lg">
+        Jawaban Quiz yang akan terekam ke database hanyalah jawaban yang dikirim
+        untuk pertama kalinya, mohon menjawab dengan hati-hati!
+      </p>
+      {children}
     </div>
   );
 };
 const LearnPage = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="w-full md:h-[calc(100vh-80px)] p-2 flex justify-center items-center flex-col md:flex-row gap-2">
+    <div className="w-full flex justify-center items-center flex-col md:flex-col gap-2">
       {children}
     </div>
   );

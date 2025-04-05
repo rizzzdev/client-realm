@@ -1,6 +1,7 @@
 "use client";
 
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import Loading from "~/components/layouts/Loading";
 import LoginRegisterForm from "~/components/layouts/LoginRegisterForm";
 import useInitialize from "~/hooks/useInitialize";
@@ -21,6 +22,7 @@ const Signup = () => {
   const signupState = useAppSelector((state) => state.auth.signup);
   const userState = useAppSelector((state) => state.user);
   const commonState = useAppSelector((state) => state.common);
+  const router = useRouter();
 
   useInitialize();
 
@@ -29,6 +31,7 @@ const Signup = () => {
       const apiResponse = await axiosIns.post<ApiResponse<null>>("/signup", {
         username: signupState.username,
         password: signupState.password,
+        confirmPassword: signupState.confirmPassword,
         fullName: signupState.fullName,
         gender: signupState.gender,
       });
@@ -38,6 +41,10 @@ const Signup = () => {
           signupWarning: apiResponse.data.message,
         })
       );
+
+      setTimeout(() => {
+        router.push("/signin");
+      }, 3000);
 
       // dispatch(setLoading(false));
     } catch (error) {
@@ -58,7 +65,7 @@ const Signup = () => {
     return <Loading />;
   }
   return (
-    <LoginRegisterForm>
+    <LoginRegisterForm onSubmit={handleSignup}>
       <LoginRegisterForm.Header text="Silahkan registrasi untuk memulai belajar di Realm!" />
 
       <LoginRegisterForm.Input
@@ -82,6 +89,18 @@ const Signup = () => {
         }
       />
       <LoginRegisterForm.Input
+        name="password"
+        value={signupState.confirmPassword ?? ""}
+        placeholder="Confirm Password"
+        type="password"
+        state={signupState.confirmPassword}
+        onChange={(e) =>
+          dispatch(
+            setSignup({ ...signupState, confirmPassword: e.target.value })
+          )
+        }
+      />
+      <LoginRegisterForm.Input
         name="full-name"
         value={signupState.fullName ?? ""}
         placeholder="Full Name"
@@ -101,7 +120,11 @@ const Signup = () => {
         }
       />
       <LoginRegisterForm.Warning type="signup" />
-      <LoginRegisterForm.Button text="SIGN UP" onClick={handleSignup} />
+      <LoginRegisterForm.Button
+        text="SIGN UP"
+        onClick={handleSignup}
+        className="text-white bg-primary"
+      />
       <LoginRegisterForm.Redirect to="signin" />
     </LoginRegisterForm>
   );

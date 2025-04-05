@@ -9,6 +9,10 @@ import {
   useState,
 } from "react";
 import Equation from "~/components/elements/Equation";
+import Header from "~/components/layouts/Header";
+import useInitialize from "~/hooks/useInitialize";
+import axiosIns from "~/libs/axiosIns";
+import { useAppSelector } from "~/redux/hooks";
 
 export interface SimulationState {
   position: number;
@@ -25,6 +29,7 @@ export interface SimulationState {
   energiPrime: number;
   isStarted: boolean;
   intervalId: number | null | NodeJS.Timeout;
+  isOutputShow: boolean;
 }
 
 interface InputListProps {
@@ -32,10 +37,12 @@ interface InputListProps {
   text: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   simulationState: SimulationState;
+  value?: number;
 }
 
 interface InputProps {
   onSubmit: () => void;
+  initialSimulationState: SimulationState;
   simulationState: SimulationState;
   setSimulationState: Dispatch<SetStateAction<SimulationState>>;
 }
@@ -43,9 +50,7 @@ interface InputProps {
 interface OutputListProps {
   htmlFor: string;
   text: string;
-  textPrime: string;
   value: number;
-  valuePrime: number;
 }
 
 interface OutputProps {
@@ -53,6 +58,7 @@ interface OutputProps {
 }
 
 interface SimulatorProps {
+  initialSimulationState: SimulationState;
   simulationState: SimulationState;
   setSimulationState: Dispatch<SetStateAction<SimulationState>>;
 }
@@ -62,7 +68,7 @@ interface SimulatorProps {
 // }
 
 const InputList = (props: InputListProps) => {
-  const { htmlFor, onChange, text, simulationState } = props;
+  const { htmlFor, onChange, text, simulationState, value } = props;
   return (
     <div className="w-full flex flex-col justify-center items-center text-sm mb-1">
       <label htmlFor={htmlFor} className="w-full">
@@ -71,28 +77,43 @@ const InputList = (props: InputListProps) => {
       <input
         type="text"
         id={htmlFor}
-        className="w-full p-1 outline-none border border-white bg-black rounded-md"
+        className="w-full p-1 outline-none border border-white bg-primary text-white rounded-md"
         onChange={onChange}
         disabled={simulationState.isStarted}
         autoCorrect="off"
         autoComplete="off"
+        value={value}
       />
     </div>
   );
 };
 
 const Input = (props: InputProps) => {
-  const { onSubmit, simulationState, setSimulationState } = props;
+  const {
+    onSubmit,
+    initialSimulationState,
+    simulationState,
+    setSimulationState,
+  } = props;
+
+  const handleReset = () => {
+    (document.getElementById("input")! as HTMLFormElement).reset();
+    // (document.getElementById("mass")! as HTMLInputElement).value = "";
+    // (document.getElementById("length")! as HTMLInputElement).value = "";
+
+    clearInterval(simulationState.intervalId as NodeJS.Timeout);
+    setSimulationState(initialSimulationState);
+  };
 
   return (
     <form
-      className="w-full border border-white text-white rounded-xl overflow-hidden p-2"
+      className="w-52 bg-white text-primary rounded-md overflow-hidden p-2 absolute top-2 right-2 z-50 hidden md:flex justify-center items-center flex-col"
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit();
       }}
+      id="input"
     >
-      <h3 className="w-full font-bold text-xl mb-5">Input</h3>
       <InputList
         htmlFor="velocity"
         text="v"
@@ -103,6 +124,7 @@ const Input = (props: InputProps) => {
             velocity: Number(e.target.value),
           }))
         }
+        // value={Number(simulationState.velocity)}
       />
       <InputList
         htmlFor="length"
@@ -114,6 +136,7 @@ const Input = (props: InputProps) => {
             length: Number(e.target.value),
           }))
         }
+        // value={Number(simulationState.length)}
       />
       <InputList
         htmlFor="mass"
@@ -125,11 +148,12 @@ const Input = (props: InputProps) => {
             mass: Number(e.target.value),
           }))
         }
+        // value={Number(simulationState.mass)}
       />
       {!simulationState.isStarted && (
         <button
           type="submit"
-          className="w-full p-1 bg-white text-black mt-5 rounded-md"
+          className="w-full p-1 bg-primary text-white mt-5 rounded-md"
         >
           Start
         </button>
@@ -137,9 +161,18 @@ const Input = (props: InputProps) => {
       {simulationState.isStarted && (
         <button
           type="submit"
-          className="w-full p-1 bg-white text-black mt-5 rounded-md"
+          className="w-full p-1 bg-primary text-white mt-5 rounded-md"
         >
           Stop
+        </button>
+      )}
+      {simulationState.isOutputShow && (
+        <button
+          onClick={handleReset}
+          type="submit"
+          className="w-full p-1 bg-primary text-white mt-5 rounded-md"
+        >
+          Reset
         </button>
       )}
     </form>
@@ -147,33 +180,19 @@ const Input = (props: InputProps) => {
 };
 
 const OutputList = (props: OutputListProps) => {
-  const { htmlFor, value, valuePrime, text, textPrime } = props;
+  const { htmlFor, value, text } = props;
   return (
-    <div className="w-full flex gap-2">
-      <div className="w-full flex flex-1 flex-col justify-center items-center text-sm mb-1">
-        <label htmlFor={htmlFor} className="w-full">
-          <Equation text={text} />
-        </label>
-        <input
-          type="text"
-          id={htmlFor}
-          className="w-full p-1 outline-none border border-white bg-black rounded-md"
-          disabled
-          value={value}
-        />
-      </div>
-      <div className="w-full flex flex-1 flex-col justify-center items-center text-sm mb-1">
-        <label htmlFor={htmlFor} className="w-full">
-          <Equation text={textPrime} />
-        </label>
-        <input
-          type="text"
-          id={htmlFor}
-          className="w-full p-1 outline-none border border-white bg-black rounded-md"
-          disabled
-          value={valuePrime}
-        />
-      </div>
+    <div className="w-full flex flex-1 flex-col justify-center items-center text-sm mb-1">
+      <label htmlFor={htmlFor} className="w-full">
+        <Equation text={text} />
+      </label>
+      <input
+        type="text"
+        id={htmlFor}
+        className="w-full p-1 outline-none border bg-white text-primary rounded-md"
+        disabled
+        value={value}
+      />
     </div>
   );
 };
@@ -181,49 +200,59 @@ const OutputList = (props: OutputListProps) => {
 const Output = (props: OutputProps) => {
   const { simulationState } = props;
   return (
-    <div className="w-full border border-white text-white rounded-xl overflow-hidden p-2">
-      <h3 className="w-full font-bold text-xl mb-5">Output</h3>
+    <div className="w-36 border bg-primary text-white rounded-xl overflow-hidden p-2">
+      {/* <h3 className="w-full font-bold text-xl mb-5">Output</h3> */}
       <OutputList
         htmlFor="time"
         text="\Delta t_0"
-        textPrime="\Delta t"
         value={simulationState.time / 1000}
-        valuePrime={Math.round(simulationState.timePrime) / 1000}
+      />
+      <OutputList htmlFor="mass" text="m_0" value={simulationState.mass} />
+      <OutputList htmlFor="length" text="L_0" value={simulationState.length} />
+    </div>
+  );
+};
+
+const OutputPrime = (props: OutputProps) => {
+  const { simulationState } = props;
+  return (
+    <div className="w-36 border bg-primary text-white rounded-xl overflow-hidden p-2">
+      {/* <h3 className="w-full font-bold text-xl mb-5">Output</h3> */}
+      <OutputList
+        htmlFor="timePrime"
+        text="\Delta t"
+        value={Math.round(simulationState.timePrime) / 1000}
       />
       <OutputList
-        htmlFor="mass"
-        text="m_0"
-        textPrime="m"
-        value={simulationState.mass}
-        valuePrime={Math.round(simulationState.massPrime * 1000) / 1000}
+        htmlFor="massPrime"
+        text="m"
+        value={Math.round(simulationState.massPrime * 1000) / 1000}
       />
       <OutputList
         htmlFor="length"
-        text="L_0"
-        textPrime="L"
-        value={simulationState.length}
-        valuePrime={Math.round(simulationState.lengthPrime * 1000) / 1000}
+        text="L"
+        value={Math.round(simulationState.lengthPrime * 1000) / 1000}
       />
     </div>
   );
 };
 
-const InputOutputWrapper = (props: InputProps) => {
-  const { onSubmit, simulationState, setSimulationState } = props;
-  return (
-    <div className="w-[20%] h-full flex flex-col justify-start items-center gap-4">
-      <Input
-        onSubmit={onSubmit}
-        simulationState={simulationState}
-        setSimulationState={setSimulationState}
-      />
-      <Output simulationState={simulationState} />
-    </div>
-  );
-};
+// const InputOutputWrapper = (props: InputProps) => {
+//   const { onSubmit, simulationState, setSimulationState } = props;
+//   return (
+//     <div className="w-[30%] h-full flex flex-col justify-start items-center gap-4 z-50">
+//       <Input
+//         onSubmit={onSubmit}
+//         simulationState={simulationState}
+//         setSimulationState={setSimulationState}
+//       />
+//       <Output simulationState={simulationState} />
+//     </div>
+//   );
+// };
 
 const Simulator = (props: SimulatorProps) => {
-  const { simulationState, setSimulationState } = props;
+  const { initialSimulationState, simulationState, setSimulationState } = props;
 
   useEffect(() => {
     const wrapper = document.getElementById("wrapper");
@@ -234,75 +263,6 @@ const Simulator = (props: SimulatorProps) => {
       }));
     }
   }, [simulationState, setSimulationState]);
-
-  return (
-    <div className="flex-1 h-full rounded-xl overflow-hidden relative p-4">
-      <div
-        className="w-full h-full  flex flex-col justify-center items-start gap-40"
-        id="wrapper"
-      >
-        <div className="w-full flex justify-between items-center gap-2 z-[2]">
-          <div
-            className="flex justify-start items-center"
-            style={{ transform: `translateX(${simulationState.position}px)` }}
-          >
-            <Image
-              src="/spaceship.png"
-              alt="sim-bg"
-              width={2000}
-              height={2000}
-              className="w-40 z-[2]"
-            />
-
-            {simulationState.isStarted && simulationState.velocity && (
-              <Equation
-                text={`\\rightarrow \\vec{v} = ${simulationState.velocity}c`}
-                className="text-white font-bold text-xl"
-              />
-            )}
-          </div>
-        </div>
-        <div className="w-full flex justify-between items-center gap-2 z-[2]">
-          <Image
-            src="/earth.png"
-            alt="earth"
-            width={2000}
-            height={2000}
-            className="w-40 z-[2]"
-          />
-        </div>
-      </div>
-      <Image
-        src="/sim-bg.jpg"
-        alt="sim-bg"
-        width={2000}
-        height={2000}
-        className="w-full h-full absolute top-0 left-0 z-[1]"
-      />
-    </div>
-  );
-};
-
-const Simulation = () => {
-  const initialSimulationState: SimulationState = {
-    position: 0,
-    velocity: 0,
-    time: 0,
-    timePrime: 0,
-    length: 0,
-    lengthPrime: 0,
-    mass: 0,
-    massPrime: 0,
-    momentum: 0,
-    momentumPrime: 0,
-    energy: 0,
-    energiPrime: 0,
-    isStarted: false,
-    intervalId: null,
-  };
-  const [simulationState, setSimulationState] = useState<SimulationState>(
-    initialSimulationState
-  );
 
   const handleSubmit = () => {
     if (simulationState.isStarted) {
@@ -347,19 +307,132 @@ const Simulation = () => {
       ...state,
       isStarted: true,
       intervalId: interval,
+      isOutputShow: true,
     }));
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center  p-4 gap-4 bg-black">
-      <Simulator
-        simulationState={simulationState}
+    <div className="flex-1 h-full overflow-hidden relative p-8 flex justify-center items-center bg-primary md:bg-simBg">
+      <div
+        className="w-full h-full hidden md:flex flex-col justify-center items-start gap-40"
+        id="wrapper"
+      >
+        {/* <div className="w-full flex justify-between items-center gap-2 z-[2]"> */}
+        <div
+          className="w-full flex justify-start items-center z-[2] gap-3"
+          style={{ transform: `translateX(${simulationState.position}px)` }}
+        >
+          <Image
+            src="/spaceship.png"
+            alt="sim-bg"
+            width={2000}
+            height={2000}
+            className="w-24 z-[2]"
+          />
+
+          {simulationState.isOutputShow && (
+            <Output simulationState={simulationState} />
+          )}
+
+          {simulationState.isStarted && simulationState.velocity && (
+            <p className="flex">
+              <Equation
+                text={`\\rightarrow \\vec{v} = ${simulationState.velocity}c`}
+                className="text-white font-bold text-xl"
+              />
+            </p>
+          )}
+        </div>
+        {/* </div> */}
+        <div className="w-full flex justify-start items-center gap-2 z-[2]">
+          <Image
+            src="/earth.png"
+            alt="earth"
+            width={2000}
+            height={2000}
+            className="w-24 z-[2]"
+          />
+          {simulationState.isOutputShow && (
+            <OutputPrime simulationState={simulationState} />
+          )}
+        </div>
+      </div>
+      {/* <Image
+        src="/sim-bg.jpg"
+        alt="sim-bg"
+        width={2000}
+        height={2000}
+        className="w-full h-full absolute top-0 left-0 z-[1] hidden md:block"
+      /> */}
+      <p className="w-full text-center text-white font-bold md:hidden">
+        Untuk pengalaman pengguna yang lebih baik, fitur ini hanya bisa diakses
+        melalui perangkat komputer atau laptop.
+      </p>
+      <Input
         setSimulationState={setSimulationState}
+        simulationState={simulationState}
+        onSubmit={handleSubmit}
+        initialSimulationState={initialSimulationState}
       />
-      <InputOutputWrapper
+      {/* <InputOutputWrapper
         simulationState={simulationState}
         setSimulationState={setSimulationState}
         onSubmit={handleSubmit}
+      /> */}
+    </div>
+  );
+};
+
+const Simulation = () => {
+  const userState = useAppSelector((state) => state.user);
+  const initialSimulationState: SimulationState = {
+    position: 0,
+    velocity: 0,
+    time: 0,
+    timePrime: 0,
+    length: 0,
+    lengthPrime: 0,
+    mass: 0,
+    massPrime: 0,
+    momentum: 0,
+    momentumPrime: 0,
+    energy: 0,
+    energiPrime: 0,
+    isStarted: false,
+    intervalId: null,
+    isOutputShow: false,
+  };
+  const [simulationState, setSimulationState] = useState<SimulationState>(
+    initialSimulationState
+  );
+
+  useInitialize(async () => {
+    if (userState.id) {
+      await axiosIns.post(
+        "/activities",
+        {
+          activityType: "SIMULATION",
+          userId: userState.id,
+          message: `Mulai melakukan simulasi.`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem(
+              "access-token"
+            )}`,
+          },
+        }
+      );
+    }
+  });
+
+  return (
+    <div className="w-full h-screen flex justify-center items-center gap-4 bg-primary pt-20">
+      <Header />
+      <Simulator
+        initialSimulationState={initialSimulationState}
+        simulationState={simulationState}
+        setSimulationState={setSimulationState}
       />
     </div>
   );

@@ -9,6 +9,7 @@ export interface SigninState {
 export interface SignupState {
   username: string;
   password: string;
+  confirmPassword: string;
   fullName: string;
   gender: string;
   signupWarning: string;
@@ -28,6 +29,7 @@ const authState: AuthState = {
   signup: {
     username: "",
     password: "",
+    confirmPassword: "",
     fullName: "",
     gender: "",
     signupWarning: "",

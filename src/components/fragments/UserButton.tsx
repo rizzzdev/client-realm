@@ -1,21 +1,18 @@
+"use client";
+
 import { UserCircle } from "@phosphor-icons/react";
 import Image from "next/image";
 import { useState } from "react";
 import axiosIns from "~/libs/axiosIns";
 import Button from "../elements/Button";
+import { useAppSelector } from "~/redux/hooks";
 
-const UserButton = ({
-  className,
-  username,
-  fullName,
-  avatarUrl,
-}: {
-  className?: string;
-  username: string;
-  fullName: string;
-  avatarUrl: string;
-}) => {
+const UserButton = ({ className }: { className?: string }) => {
+  const { username, fullName, avatarUrl } = useAppSelector(
+    (state) => state.user
+  );
   const [isActiveButton, setIsActiveButton] = useState(false);
+
   const handleSignout = async () => {
     await axiosIns.patch("/signout");
     window.localStorage.setItem("access-token", "");
@@ -28,7 +25,7 @@ const UserButton = ({
     >
       <div className="w-fit md:w-[20%] flex justify-end items-center text-xs md:text-sm">
         <div
-          className=" bg-white flex items-center gap-1 md:gap-2 px-2 py-1 md:p-2 md:bg-white text-primary rounded-md md:relative cursor-pointer"
+          className=" bg-white flex items-center gap-1 md:gap-2 px-2 py-1 md:p-2 md:bg-white text-primary rounded-md md:relative cursor-pointer border-[2px] border-primary"
           onClick={() => setIsActiveButton(!isActiveButton)}
         >
           <UserCircle size={24} />
@@ -44,8 +41,12 @@ const UserButton = ({
               className="w-full aspect-square object-cover mb-2"
             />
             <p className="text-primary font-bold">{fullName}</p>
-            <p className="text-primary font-bold">@{username}</p>
-            <Button text="SIGN OUT" onClick={handleSignout} className="h-fit" />
+            <p className="text-primary font-bold mb-2">@{username}</p>
+            <Button
+              text="SIGN OUT"
+              onClick={handleSignout}
+              className="h-fit bg-primary text-white p-2 mt-0"
+            />
           </div>
         )}
       </div>

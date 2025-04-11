@@ -175,7 +175,7 @@ const Preface = ({
                         {material.title}
                       </th>
                       <th className="w-[20%] border border-primary font-normal p-1">
-                        <Link href={`/learn/${material.id}`}>Klik DisinI!</Link>
+                        <Link href={`/learn/${material.id}`}>Klik Disini!</Link>
                       </th>
                       <th className="w-[20%] border border-primary font-normal p-1">
                         {isDone ? (

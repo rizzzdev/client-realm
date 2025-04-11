@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import Button from "~/components/elements/Button";
 import Equation from "~/components/elements/Equation";
 import Header from "~/components/layouts/Header";
 import useInitialize from "~/hooks/useInitialize";
@@ -383,7 +384,36 @@ const Simulator = (props: SimulatorProps) => {
   );
 };
 
+const Context = ({ onClick }: { onClick?: () => void }) => {
+  return (
+    <div className="w-full md:flex flex-col justify-center items-center gap-2 text-white p-16 hidden absolute z-[60] bg-primary h-full">
+      <h3 className="text-3xl font-bold mb-4">Konteks Simulasi</h3>
+      <p className="w-full text-justify text-md">
+        Pada simulasi berikut ini, terdapat sebuah roket yang bergerak dengan
+        kecepatan <Equation text="v" /> dengan <Equation text="v" /> merupakan
+        fraksi dari kecepatan cahaya (<Equation text="c" />
+        ). Roket tersebut juga memiliki massa sebesar <Equation text="m_0" />{" "}
+        dan panjang sebesar <Equation text="L_0" />. Terdapat dua orang
+        pengamat, satu pengamat berada di dalam roket dan pengamat lainnya
+        berada di permukaan Bumi. Simulasi ini akan menunjukan adanya perbedaan
+        pengukuran beberapa besaran seperti waktu, panjang, energi, dan
+        sebagainya antara dua orang pengamat yang berada di dua kerangka acuan
+        (dalam hal ini, kerangka acuannya adalah roket dan Bumi) yang saling
+        bergerak relatif dengan kecepatan konstan. Perbedaan hasil pengukuran
+        tersebut merupakan konsekuensi dari teori relativitas khusus yang
+        dikembangkan oleh Albert Einstein.
+      </p>
+      <Button
+        text="Mulai Simulasi"
+        className="bg-white text-primary w-full text-lg font-bold mt-4"
+        onClick={onClick}
+      />
+    </div>
+  );
+};
+
 const Simulation = () => {
+  const [isContextActive, setIsContextActive] = useState(true);
   const userState = useAppSelector((state) => state.user);
   const initialSimulationState: SimulationState = {
     position: 0,
@@ -429,6 +459,7 @@ const Simulation = () => {
   return (
     <div className="w-full h-screen flex justify-center items-center gap-4 bg-primary pt-20">
       <Header />
+      {isContextActive && <Context onClick={() => setIsContextActive(false)} />}
       <Simulator
         initialSimulationState={initialSimulationState}
         simulationState={simulationState}

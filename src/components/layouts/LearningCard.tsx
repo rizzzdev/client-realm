@@ -48,7 +48,7 @@ const LearningCard = ({
             ? "Mulai Belajar"
             : "Silahkan selesaikan materi sebelumnya untuk membuka materi ini!"
         }
-        className="mt-3 text-white bg-primary"
+        className="mt-3 text-white bg-primary h-fit p-2"
         onClick={handleClick}
         disabled={!isUnlocked}
       />

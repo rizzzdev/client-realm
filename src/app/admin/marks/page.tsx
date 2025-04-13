@@ -21,9 +21,9 @@ interface MarkListsTableProps {
   testsState: TestState[];
   filter: "test" | "quiz";
 }
-
 const MarkListsTable = (props: MarkListsTableProps) => {
-  return (
+
+return (
     <div className="w-full">
       <table className="w-full">
         <thead className="w-full border-y border-y-white bg-primary">

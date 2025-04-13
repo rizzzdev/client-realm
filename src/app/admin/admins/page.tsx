@@ -11,11 +11,11 @@ import { UserState } from "~/redux/slices/userSlice";
 import { setUsers } from "~/redux/slices/usersSlice";
 import { ApiResponse } from "~/types/apiResponse";
 
-interface StudentListsTableProps {
-  studentsState: UserState[];
+interface AdminsListTableProps {
+  adminsState: UserState[];
 }
 
-const StudentListsTable = (props: StudentListsTableProps) => {
+const AdminsListTable = (props: AdminsListTableProps) => {
   return (
     <div className="w-full">
       <table className="w-full">
@@ -40,30 +40,30 @@ const StudentListsTable = (props: StudentListsTableProps) => {
           </tr>
         </thead>
         <tbody className="w-full">
-          {props.studentsState
-            ?.filter((student) => !student.deletedAt)
-            ?.filter((student) => student.role === "STUDENT")
-            ?.map((student, index) => {
+          {props.adminsState
+            ?.filter((admin) => !admin.deletedAt)
+            ?.filter((admin) => admin.role === "ADMIN")
+            ?.map((admin, index) => {
               return (
                 <tr
                   className="w-full text-white text-sm   hover:bg-white  hover:text-primary"
-                  key={student.id}
+                  key={admin.id + index}
                 >
                   <td className="p-1 border-y border-y-white text-center w-[5%]">
                     {index + 1}
                   </td>
                   <td className="p-1 border-y border-y-white text-center w-[20%]">
-                    {student.username}
+                    {admin.username}
                   </td>
                   <td className="p-1 border-y border-y-white text-center w-25%]">
-                    {student.fullName}
+                    {admin.fullName}
                   </td>
                   <td className="p-1 border-y border-y-white text-center w-[15%]">
-                    {student.gender === "MALE" ? "Laki-laki" : "Perempuan"}
+                    {admin.gender === "MALE" ? "Laki-laki" : "Perempuan"}
                   </td>
                   <td className="p-1 border-y border-y-white text-center w-[15%]">
                     <Image
-                      src={student.avatarUrl}
+                      src={admin.avatarUrl}
                       alt="avatar"
                       width={100}
                       height={100}
@@ -71,7 +71,7 @@ const StudentListsTable = (props: StudentListsTableProps) => {
                     />
                   </td>
                   <td className="p-1 border-y border-y-white text-center w-[20%]">
-                    {student
+                    {admin
                       .signedUpAt!.toString()
                       .slice(0, 16)
                       .split("T")
@@ -87,7 +87,7 @@ const StudentListsTable = (props: StudentListsTableProps) => {
   );
 };
 
-const Students = () => {
+const Admins = () => {
   const { isLoading } = useAppSelector((state) => state.common);
   const usersState = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
@@ -114,13 +114,13 @@ const Students = () => {
 
   return (
     <Body>
-      <HeaderPage title="Daftar Para Peserta Didik">
-        Menu ini digunakan untuk melihat daftar peserta didik yang terdaftar
+      <HeaderPage title="Daftar Para Admin">
+        Menu ini digunakan untuk melihat daftar admin yang terdaftar
         pada media pembelajaran ini.
       </HeaderPage>
-      <StudentListsTable studentsState={usersState} />
+      <AdminsListTable adminsState={usersState} />
     </Body>
   );
 };
 
-export default Students;
+export default Admins;

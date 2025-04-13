@@ -117,7 +117,7 @@ const Input = (props: InputProps) => {
     >
       <InputList
         htmlFor="velocity"
-        text="v"
+        text="v \; (c)"
         simulationState={simulationState}
         onChange={(e) =>
           setSimulationState((state) => ({
@@ -128,8 +128,19 @@ const Input = (props: InputProps) => {
         // value={Number(simulationState.velocity)}
       />
       <InputList
+        htmlFor="mass"
+        text="m_0 \; (kg)"
+        simulationState={simulationState}
+        onChange={(e) =>
+          setSimulationState((state) => ({
+            ...state,
+            mass: Number(e.target.value),
+          }))
+        }
+      />
+      <InputList
         htmlFor="length"
-        text="L_0"
+        text="L_0 \; (m)"
         simulationState={simulationState}
         onChange={(e) =>
           setSimulationState((state) => ({
@@ -138,17 +149,6 @@ const Input = (props: InputProps) => {
           }))
         }
         // value={Number(simulationState.length)}
-      />
-      <InputList
-        htmlFor="mass"
-        text="m_0"
-        simulationState={simulationState}
-        onChange={(e) =>
-          setSimulationState((state) => ({
-            ...state,
-            mass: Number(e.target.value),
-          }))
-        }
         // value={Number(simulationState.mass)}
       />
       {!simulationState.isStarted && (
@@ -205,11 +205,19 @@ const Output = (props: OutputProps) => {
       {/* <h3 className="w-full font-bold text-xl mb-5">Output</h3> */}
       <OutputList
         htmlFor="time"
-        text="\Delta t_0"
+        text="\Delta t_0 \; (s)"
         value={simulationState.time / 1000}
       />
-      <OutputList htmlFor="mass" text="m_0" value={simulationState.mass} />
-      <OutputList htmlFor="length" text="L_0" value={simulationState.length} />
+      <OutputList
+        htmlFor="mass"
+        text="m_0 \; (kg)"
+        value={simulationState.mass}
+      />
+      <OutputList
+        htmlFor="length"
+        text="L_0 \; (kg)"
+        value={simulationState.length}
+      />
     </div>
   );
 };
@@ -221,17 +229,17 @@ const OutputPrime = (props: OutputProps) => {
       {/* <h3 className="w-full font-bold text-xl mb-5">Output</h3> */}
       <OutputList
         htmlFor="timePrime"
-        text="\Delta t"
+        text="\Delta t \; (s)"
         value={Math.round(simulationState.timePrime) / 1000}
       />
       <OutputList
         htmlFor="massPrime"
-        text="m"
+        text="m \; (kg)"
         value={Math.round(simulationState.massPrime * 1000) / 1000}
       />
       <OutputList
         htmlFor="length"
-        text="L"
+        text="L \; (m)"
         value={Math.round(simulationState.lengthPrime * 1000) / 1000}
       />
     </div>
@@ -277,15 +285,23 @@ const Simulator = (props: SimulatorProps) => {
     }
 
     if (!simulationState.velocity) {
-      alert("Please enter velocity");
+      alert("Please enter velocity!");
       return;
     }
+
+    if (
+      Number(simulationState.velocity <= 0) ||
+      Number(simulationState.velocity >= 1)
+    ) {
+      alert("Please enter velocity between 0c and 1c!");
+    }
+
     if (!simulationState.mass) {
-      alert("Please enter mass");
+      alert("Please enter mass!");
       return;
     }
     if (!simulationState.length) {
-      alert("Please enter length");
+      alert("Please enter length!");
       return;
     }
 

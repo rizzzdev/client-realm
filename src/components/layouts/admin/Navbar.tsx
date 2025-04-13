@@ -61,6 +61,11 @@ const Menu = () => {
         iconComponent={<ListBullets size={24} weight="fill" />}
       />
       <MenuList
+        link="/admins"
+        text="Daftar Admin"
+        iconComponent={<ListBullets size={24} weight="fill" />}
+      />
+      <MenuList
         link="/activity-logs"
         text="Log Aktivitas"
         iconComponent={<Article size={24} weight="fill" />}

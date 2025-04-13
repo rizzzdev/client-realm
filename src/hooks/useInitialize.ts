@@ -38,7 +38,7 @@ const useInitialize = (callback?: () => void) => {
 
     const screenWidth = window.screen.width;
     const html = document.querySelector("html");
-    html?.classList.add("no-scrollbar");
+    // html?.classList.add("no-scrollbar");
     if (screenWidth >= 1280) {
       html!.style.fontSize = `${Math.round(screenWidth / 80)}px`;
     }

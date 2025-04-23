@@ -88,7 +88,11 @@ const ActivityLogs = () => {
         Menu ini digunakan untuk melihat aktivitas yang dilakukan oleh peserta
         didik pada media pembelajaran ini.
       </HeaderPage>
-      <ActivityLogsTable activitiesState={activitiesState} />
+      <ActivityLogsTable
+        activitiesState={activitiesState.sort((a, b) =>
+          a.id!.localeCompare(b.id!)
+        )}
+      />
     </Body>
   );
 };

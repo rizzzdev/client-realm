@@ -21,17 +21,14 @@ const MaterialListsTable = (props: MaterialListsTableProps) => {
         <thead className="w-full border-y border-y-white bg-primary">
           <tr className="w-full text-white text-sm   hover:bg-white  hover:text-primary">
             <td className="px-1 py-8 font-bold  text-center w-[5%]">No.</td>
-            <td className="px-1 py-8 font-bold  text-center w-[15%]">
+            <td className="px-1 py-8 font-bold  text-center w-[25%]">
               Judul Materi
             </td>
-            <td className="px-1 py-8 font-bold  text-center w-[30%]">
+            <td className="px-1 py-8 font-bold  text-center w-[40%]">
               Deskripsi Materi
             </td>
             <td className="px-1 py-8 font-bold  text-center w-[20%]">
               Gambar Thumbnail
-            </td>
-            <td className="px-1 py-8 font-bold  text-center w-[20%]">
-              Dibuat Pada
             </td>
             <td className="px-1 py-8 font-bold  text-center w-[10%]">Tautan</td>
           </tr>
@@ -46,10 +43,10 @@ const MaterialListsTable = (props: MaterialListsTableProps) => {
                 <td className="p-1 border-y border-y-white text-center w-[5%]">
                   {index + 1}
                 </td>
-                <td className="p-1 border-y border-y-white text-center w-[15%]">
+                <td className="p-1 border-y border-y-white text-center w-[25%]">
                   {material.title}
                 </td>
-                <td className="p-1 border-y border-y-white text-center w-[30%]">
+                <td className="p-1 border-y border-y-white text-center w-[40%]">
                   {material.description}
                 </td>
                 <td className="p-1 border-y border-y-white text-center w-[20%]">
@@ -60,14 +57,6 @@ const MaterialListsTable = (props: MaterialListsTableProps) => {
                     height={720}
                     className="w-full aspect-video"
                   />
-                </td>
-                <td className="p-1 border-y border-y-white text-center w-[20%]">
-                  {material
-                    .createdAt!.toString()
-                    .slice(0, 16)
-                    .split("T")
-                    .reverse()
-                    .join(" ")}
                 </td>
                 <td className="p-1 border-y border-y-white text-center w-[10%]">
                   <Link href={`/learn/${material.id}`}>Klik Disini</Link>

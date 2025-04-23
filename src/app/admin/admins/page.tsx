@@ -25,17 +25,14 @@ const AdminsListTable = (props: AdminsListTableProps) => {
             <td className="px-1 py-8 font-bold  text-center w-[20%]">
               Username
             </td>
-            <td className="px-1 py-8 font-bold  text-center w-[25%]">
+            <td className="px-1 py-8 font-bold  text-center w-[35%]">
               Nama Lengkap
             </td>
-            <td className="px-1 py-8 font-bold  text-center w-[15%]">
+            <td className="px-1 py-8 font-bold  text-center w-[20%]">
               Jenis Kelamin
             </td>
-            <td className="px-1 py-8 font-bold  text-center w-[15%]">
-              Gambar Avatar
-            </td>
             <td className="px-1 py-8 font-bold  text-center w-[20%]">
-              Terdaftar Pada
+              Gambar Avatar
             </td>
           </tr>
         </thead>
@@ -55,13 +52,13 @@ const AdminsListTable = (props: AdminsListTableProps) => {
                   <td className="p-1 border-y border-y-white text-center w-[20%]">
                     {admin.username}
                   </td>
-                  <td className="p-1 border-y border-y-white text-center w-25%]">
+                  <td className="p-1 border-y border-y-white text-center w-35%]">
                     {admin.fullName}
                   </td>
-                  <td className="p-1 border-y border-y-white text-center w-[15%]">
+                  <td className="p-1 border-y border-y-white text-center w-[20%]">
                     {admin.gender === "MALE" ? "Laki-laki" : "Perempuan"}
                   </td>
-                  <td className="p-1 border-y border-y-white text-center w-[15%]">
+                  <td className="p-1 border-y border-y-white text-center w-[20%]">
                     <Image
                       src={admin.avatarUrl}
                       alt="avatar"
@@ -69,14 +66,6 @@ const AdminsListTable = (props: AdminsListTableProps) => {
                       height={100}
                       className="w-full object-fill aspect-square"
                     />
-                  </td>
-                  <td className="p-1 border-y border-y-white text-center w-[20%]">
-                    {admin
-                      .signedUpAt!.toString()
-                      .slice(0, 16)
-                      .split("T")
-                      .reverse()
-                      .join(" ")}
                   </td>
                 </tr>
               );
@@ -115,8 +104,8 @@ const Admins = () => {
   return (
     <Body>
       <HeaderPage title="Daftar Para Admin">
-        Menu ini digunakan untuk melihat daftar admin yang terdaftar
-        pada media pembelajaran ini.
+        Menu ini digunakan untuk melihat daftar admin yang terdaftar pada media
+        pembelajaran ini.
       </HeaderPage>
       <AdminsListTable adminsState={usersState} />
     </Body>

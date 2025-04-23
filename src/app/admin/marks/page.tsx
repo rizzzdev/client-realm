@@ -22,28 +22,24 @@ interface MarkListsTableProps {
   filter: "test" | "quiz";
 }
 const MarkListsTable = (props: MarkListsTableProps) => {
-
-return (
+  return (
     <div className="w-full">
       <table className="w-full">
         <thead className="w-full border-y border-y-white bg-primary">
           <tr className="w-full text-white text-sm   hover:bg-white  hover:text-primary">
             <td className="px-1 py-8 font-bold  text-center w-[10%]">No.</td>
-            <td className="px-1 py-8 font-bold  text-center w-[20%]">Nama</td>
+            <td className="px-1 py-8 font-bold  text-center w-[30%]">Nama</td>
             {props.filter === "quiz" && (
-              <td className="px-1 py-8 font-bold  text-center w-[30%]">
+              <td className="px-1 py-8 font-bold  text-center w-[40%]">
                 Nama Kuis
               </td>
             )}
             {props.filter === "test" && (
-              <td className="px-1 py-8 font-bold  text-center w-[30%]">
+              <td className="px-1 py-8 font-bold  text-center w-[40%]">
                 Nama Test
               </td>
             )}
-            <td className="px-1 py-8 font-bold  text-center w-[10%]">Nilai</td>
-            <td className="px-1 py-8 font-bold  text-center w-[30%]">
-              Dinilai Pada
-            </td>
+            <td className="px-1 py-8 font-bold  text-center w-[20%]">Nilai</td>
           </tr>
         </thead>
         <tbody className="w-full">
@@ -66,29 +62,21 @@ return (
                 <td className="p-1 border-y border-y-white text-center w-[10%]">
                   {index + 1}
                 </td>
-                <td className="p-1 border-y border-y-white text-center w-[20%]">
+                <td className="p-1 border-y border-y-white text-center w-[30%]">
                   {user?.fullName}
                 </td>
                 {props.filter === "quiz" && (
-                  <td className="p-1 border-y border-y-white text-center w-[30%]">
+                  <td className="p-1 border-y border-y-white text-center w-[40%]">
                     {material?.title}
                   </td>
                 )}
                 {props.filter === "test" && (
-                  <td className="p-1 border-y border-y-white text-center w-[30%]">
+                  <td className="p-1 border-y border-y-white text-center w-[40%]">
                     {test?.title}
                   </td>
                 )}
-                <td className="p-1 border-y border-y-white text-center w-[10%]">
+                <td className="p-1 border-y border-y-white text-center w-[20%]">
                   {mark.mark}
-                </td>
-                <td className="p-1 border-y border-y-white text-center w-[30%]">
-                  {mark.markedAt
-                    .toString()
-                    .slice(0, 16)
-                    .split("T")
-                    .reverse()
-                    .join(" ")}
                 </td>
               </tr>
             );

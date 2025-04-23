@@ -25,17 +25,14 @@ const StudentListsTable = (props: StudentListsTableProps) => {
             <td className="px-1 py-8 font-bold  text-center w-[20%]">
               Username
             </td>
-            <td className="px-1 py-8 font-bold  text-center w-[25%]">
+            <td className="px-1 py-8 font-bold  text-center w-[35%]">
               Nama Lengkap
             </td>
             <td className="px-1 py-8 font-bold  text-center w-[15%]">
               Jenis Kelamin
             </td>
-            <td className="px-1 py-8 font-bold  text-center w-[15%]">
+            <td className="px-1 py-8 font-bold  text-center w-[25%]">
               Gambar Avatar
-            </td>
-            <td className="px-1 py-8 font-bold  text-center w-[20%]">
-              Terdaftar Pada
             </td>
           </tr>
         </thead>
@@ -55,13 +52,13 @@ const StudentListsTable = (props: StudentListsTableProps) => {
                   <td className="p-1 border-y border-y-white text-center w-[20%]">
                     {student.username}
                   </td>
-                  <td className="p-1 border-y border-y-white text-center w-25%]">
+                  <td className="p-1 border-y border-y-white text-center w-35%]">
                     {student.fullName}
                   </td>
                   <td className="p-1 border-y border-y-white text-center w-[15%]">
                     {student.gender === "MALE" ? "Laki-laki" : "Perempuan"}
                   </td>
-                  <td className="p-1 border-y border-y-white text-center w-[15%]">
+                  <td className="p-1 border-y border-y-white text-center w-[25%]">
                     <Image
                       src={student.avatarUrl}
                       alt="avatar"
@@ -69,14 +66,6 @@ const StudentListsTable = (props: StudentListsTableProps) => {
                       height={100}
                       className="w-full object-fill aspect-square"
                     />
-                  </td>
-                  <td className="p-1 border-y border-y-white text-center w-[20%]">
-                    {student
-                      .signedUpAt!.toString()
-                      .slice(0, 16)
-                      .split("T")
-                      .reverse()
-                      .join(" ")}
                   </td>
                 </tr>
               );

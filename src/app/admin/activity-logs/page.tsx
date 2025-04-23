@@ -19,15 +19,12 @@ const ActivityLogsTable = (props: ActivityLogsTableProps) => {
         <thead className="w-full border-y border-y-white bg-primary">
           <tr className="w-full text-white text-sm   hover:bg-white  hover:text-primary">
             <td className="px-1 py-8 font-bold  text-center w-[5%]">No.</td>
-            <td className="px-1 py-8 font-bold  text-center w-[20%]">Nama</td>
+            <td className="px-1 py-8 font-bold  text-center w-[40%]">Nama</td>
             <td className="px-1 py-8 font-bold  text-center w-[20%]">
               Jenis Aktivitas
             </td>
             <td className="px-1 py-8 font-bold  text-center w-[35%]">
               Keterangan
-            </td>
-            <td className="px-1 py-8 font-bold  text-center w-[20%]">
-              Dilakukan Pada
             </td>
           </tr>
         </thead>
@@ -49,14 +46,6 @@ const ActivityLogsTable = (props: ActivityLogsTableProps) => {
                 </td>
                 <td className="p-1 border-y border-y-white text-center w-[35%]">
                   {activity.message}
-                </td>
-                <td className="p-1 border-y border-y-white text-center w-[20%]">
-                  {activity.doneAt
-                    .toString()
-                    .slice(0, 16)
-                    .split("T")
-                    .reverse()
-                    .join(" ")}
                 </td>
               </tr>
             );

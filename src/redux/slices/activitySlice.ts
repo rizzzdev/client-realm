@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Activity {
-  readonly id?: string;
+  id?: string;
   activityType: "QUIZ" | "TEST" | "MATERIAL" | "SIMULATION";
   materialId?: string;
   testId?: string;

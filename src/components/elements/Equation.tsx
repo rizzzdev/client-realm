@@ -6,9 +6,11 @@ import "katex/dist/katex.min.css";
 const Equation = ({
   text,
   className,
+  type,
 }: {
   text: string;
   className?: string;
+  type?: "inline" | "block";
 }) => {
   // const textValidation = text
   //   .split(/<\/?script>/g)
@@ -24,7 +26,9 @@ const Equation = ({
       dangerouslySetInnerHTML={{
         __html: latex,
       }}
-      className={`text-md  ${className}`}
+      className={` ${
+        type === "block" ? "block text-xl" : "text-md"
+      } w-full text-center ${className} mb-2`}
     ></span>
   );
 };

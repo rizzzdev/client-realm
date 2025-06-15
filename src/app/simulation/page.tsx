@@ -417,7 +417,11 @@ const Context = ({ onClick }: { onClick?: () => void }) => {
         (dalam hal ini, kerangka acuannya adalah roket dan Bumi) yang saling
         bergerak relatif dengan kecepatan konstan. Perbedaan hasil pengukuran
         tersebut merupakan konsekuensi dari teori relativitas khusus yang
-        dikembangkan oleh Albert Einstein.
+        dikembangkan oleh Albert Einstein.{" "}
+        <span className="font-bold">
+          Simulasi ini merupakan simulasi untuk materi dilatasi waktu, kontraksi
+          panjang, dan massa relativistik.
+        </span>
       </p>
       <Button
         text="Mulai Simulasi"

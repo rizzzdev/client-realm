@@ -9,7 +9,7 @@ import { setLoading } from "~/redux/slices/commonSlice";
 
 const stringElementToElementObject = (
   stringElement: string,
-  elementType: "paragraph" | "highlight" | "img"
+  elementType: "paragraph" | "highlight" | "img" | "paragraph-eq"
 ) => {
   const elementRegex = new RegExp(
     `<${elementType}>([\\s\\S]*?)<\\/${elementType}>`,
@@ -35,6 +35,10 @@ const stringElementToElementObjectAll = (stringElement: string) => {
     stringElement,
     "paragraph"
   );
+  const paragraphEqElementObject = stringElementToElementObject(
+    stringElement,
+    "paragraph-eq"
+  );
   const highlightElementObject = stringElementToElementObject(
     stringElement,
     "highlight"
@@ -42,6 +46,7 @@ const stringElementToElementObjectAll = (stringElement: string) => {
   const imgElementObject = stringElementToElementObject(stringElement, "img");
   const allElementObject = [
     ...paragraphElementObject,
+    ...paragraphEqElementObject,
     ...highlightElementObject,
     ...imgElementObject,
   ];
@@ -64,6 +69,25 @@ const equationElementParser = (stringElement: string, id: string) => {
   return allElementMap;
 };
 
+const equationBlockElementParser = (stringElement: string, id: string) => {
+  const elementSplit = stringElement
+    ?.split(/<\/?equation-block>/)
+    ?.filter((el) => el.trim() !== "");
+  const allElementMap = elementSplit.map((element, index) => {
+    // if (index % 2 !== 0) {
+    //   return element;
+    // }
+    return (
+      <LearnPage.Material.Equation
+        type="block"
+        key={id + index}
+        text={element}
+      />
+    );
+  });
+  return allElementMap;
+};
+
 const allElementParser = (stringElement: string, id: string) => {
   const elementObjectAll = stringElementToElementObjectAll(stringElement);
   const parsedElement = elementObjectAll?.map((element) => {
@@ -73,6 +97,12 @@ const allElementParser = (stringElement: string, id: string) => {
           <LearnPage.Material.Paragraph key={element.index + id}>
             {equationElementParser(element.elementStringValue, id)}
           </LearnPage.Material.Paragraph>
+        );
+      case "paragraph-eq":
+        return (
+          <LearnPage.Material.Highlight key={element.index + id}>
+            {equationBlockElementParser(element.elementStringValue, id)}
+          </LearnPage.Material.Highlight>
         );
       case "highlight":
         return (

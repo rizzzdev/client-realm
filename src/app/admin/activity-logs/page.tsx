@@ -72,7 +72,7 @@ const ActivityLogs = () => {
           },
         }
       );
-      activitiesRequest.data.data.forEach((activity: Activity) => {
+      activitiesRequest.data.data.sort().forEach((activity: Activity) => {
         dispatch(
           setActivities({
             ...activity,
@@ -88,11 +88,7 @@ const ActivityLogs = () => {
         Menu ini digunakan untuk melihat aktivitas yang dilakukan oleh peserta
         didik pada media pembelajaran ini.
       </HeaderPage>
-      <ActivityLogsTable
-        activitiesState={activitiesState.sort((a, b) =>
-          a.id!.localeCompare(b.id!)
-        )}
-      />
+      <ActivityLogsTable activitiesState={activitiesState} />
     </Body>
   );
 };

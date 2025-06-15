@@ -1,7 +1,6 @@
 "use client";
 
 import Equation from "~/components/elements/Equation";
-import Header from "~/components/layouts/Header";
 import Material from "~/components/layouts/Material";
 
 const Page = () => {

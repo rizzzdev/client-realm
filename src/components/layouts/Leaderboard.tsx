@@ -29,7 +29,7 @@ const Leaderboard = ({
               <td className="p-2 text-center">{leaderboard.username}</td>
               <td className="p-2 text-center">{leaderboard.fullName}</td>
               <td className="p-2 text-center">
-                {leaderboard.accumulatedMarks}
+                {Math.round(leaderboard.accumulatedMarks * 100) / 100}
               </td>
             </tr>
           ))}

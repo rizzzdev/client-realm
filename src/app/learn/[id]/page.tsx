@@ -205,7 +205,7 @@ const Learn = () => {
       }
     );
 
-    alert(`Nilai Anda ${mark}`);
+    alert(`Nilai Anda ${Math.round(mark * 100) / 100}!`);
   };
 
   if (commonState.isLoading || !userState.isLogin) {

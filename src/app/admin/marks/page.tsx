@@ -76,7 +76,7 @@ const MarkListsTable = (props: MarkListsTableProps) => {
                   </td>
                 )}
                 <td className="p-1 border-y border-y-white text-center w-[20%]">
-                  {mark.mark}
+                  {Math.round(mark.mark * 100) / 100}
                 </td>
               </tr>
             );
